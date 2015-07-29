@@ -1,84 +1,52 @@
 var through = require('through2')
-	, gutil = require('gulp-util')
 	, Freemarker = require('freemarker.js')
+	, PluginError = require('gulp-util').PluginError
 
-module.exports = function (param) {
-	'use strict';
+module.exports = function(options) {
 
-	if (!param)
-		throw new gutil.PluginError('gulp-freemarker', 'No param supplied')
+	if (!options)
+		throw new PluginError('gulp-freemarker', 'no options supplied')
+	if (!options.viewRoot)
+		throw new PluginError('gulp-freemarker', 'viewRoot options is necessary!')
 
-	if (!param.viewRoot)
-		throw new gutil.PluginError('gulp-freemarker', 'viewRoot param is necessary!')
+	var engine = new Freemarker(options)
 
-	var Fm = new Freemarker(param)
-
-	function freemarker(file, enc, callback) {
-
+	return through.obj(function(file, encoding, cb) {
 		if (file.isNull()) {
 			this.push(file)
-			return callback()
+			return cb()
 		}
-
-		var _this = this;
-
 		if (file.isStream()) {
-
-			var mockDataTxt = '';
-
+			var toString = ''
 			file.contents.on('data', function(chunk) {
-				mockDataTxt += chunk;
-			});
-
+				toString += chunk
+			})
 			file.contents.on('end', function() {
-
-				var mockData = JSON.parse(mockDataTxt);
-				Fm.render(mockData.tpl, mockData.data, function(err, out, msg) {
-
-					if (err) return callback(err);
-
-					var stream = through();
-					stream.write(out || msg);
-
-					// Emit error to file
-					stream.on('error', _this.emit.bind(_this, 'error'));
-					file.contents = stream;
-					stream.end();
-
-					_this.push(file);
-					return callback();
-				});
-
-			});
-
+				var configuration = JSON.parse(toString)
+				engine.render(configuration.tpl, configuration.data, function(err, out, msg) {
+					if (err) return cb(err)
+					var stream = through()
+					stream.on('error', this.emit.bind(this, 'error'))
+					stream.write(out || msg)
+					file.contents = stream
+					stream.end()
+					this.push(file)
+					cb()
+				}.bind(this))
+			}.bind(this))
 			file.contents.on('error', function(err) {
-				_this.emit('error',
-					new gutil.PluginError('gulp-freemarker', 'Read stream error!'));
-			});
-
+				this.emit('error', new PluginError('gulp-freemarker', 'Read stream error!'))
+			}.bind(this))
 		}
-
-		// check if file.contents is a `Buffer`
 		if (file.isBuffer()) {
-
-			// Get mock data
-			var mockData = JSON.parse(file.contents);
-
-			// process template with mock data
-			Fm.render(mockData.tpl, mockData.data, function(err, out, msg) {
-
-				if (err) return callback(err);
-
-				// return result or error msg from freemarker engine
-				file.contents = new Buffer(out || msg);
-				file.path = file.path.replace('.json', '.html');
-				_this.push(file);
-				return callback();
-			});
-
+			var configuration = JSON.parse(file.contents)
+			engine.render(configuration.tpl, configuration.data, function(err, out, msg) {
+				if (err) return cb(err)
+				file.contents = new Buffer(out || msg)
+				file.path = file.path.replace('.json', '.html') // fixme: feels a bit hacky
+				this.push(file)
+				cb()
+			}.bind(this))
 		}
-		return ;
-	}
-
-	return through.obj(freemarker)
+	})
 }
