@@ -1,6 +1,6 @@
 
 # gulp-freemarker
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]  [![Coverage Status][coveralls-image]][coveralls-url] [![Dependency Status][depstat-image]][depstat-url]
+[![Build Status](https://travis-ci.org/ivoputzer/gulp-freemarker.svg?branch=master)](https://travis-ci.org/ivoputzer/gulp-freemarker)
 
 > freemarker plugin for [gulp](https://github.com/wearefractal/gulp)
 
@@ -62,15 +62,3 @@ Options for [Freemarker.js](http://github.com/ijse/freemarker.js). see also [htt
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
-
-[npm-url]: https://npmjs.org/package/gulp-freemarker
-[npm-image]: https://badge.fury.io/js/gulp-freemarker.png
-
-[travis-url]: http://travis-ci.org/ijse/gulp-freemarker
-[travis-image]: https://secure.travis-ci.org/ijse/gulp-freemarker.png?branch=master
-
-[coveralls-url]: https://coveralls.io/r/ijse/gulp-freemarker
-[coveralls-image]: https://coveralls.io/repos/ijse/gulp-freemarker/badge.png
-
-[depstat-url]: https://david-dm.org/ijse/gulp-freemarker
-[depstat-image]: https://david-dm.org/ijse/gulp-freemarker.png
