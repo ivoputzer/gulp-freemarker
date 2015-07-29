@@ -38,7 +38,6 @@ module.exports = function (param) {
 					if (err) return callback(err);
 
 					var stream = through();
-
 					stream.write(out || msg);
 
 					// Emit error to file
