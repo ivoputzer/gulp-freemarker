@@ -1,28 +1,23 @@
-var through = require("through2"),
-	Freemarker = require('freemarker.js'),
-	gutil = require("gulp-util");
+var through = require('through2')
+	, gutil = require('gulp-util')
+	, Freemarker = require('freemarker.js')
 
 module.exports = function (param) {
-	"use strict";
-	var Fm = null;
+	'use strict';
 
-	// check for required params
-	if (!param) {
-		throw new gutil.PluginError("gulp-freemarker", "No param supplied");
-	}
-	if (!param.viewRoot) {
-		throw new gutil.PluginError("gulp-freemarker", "viewRoot param is necessary!");
-	}
+	if (!param)
+		throw new gutil.PluginError('gulp-freemarker', 'No param supplied')
 
-	Fm = new Freemarker(param);
+	if (!param.viewRoot)
+		throw new gutil.PluginError('gulp-freemarker', 'viewRoot param is necessary!')
+
+	var Fm = new Freemarker(param)
 
 	function freemarker(file, enc, callback) {
-		/*jshint validthis:true*/
 
-		// Do nothing if no contents
 		if (file.isNull()) {
-			this.push(file);
-			return callback();
+			this.push(file)
+			return callback()
 		}
 
 		var _this = this;
@@ -36,8 +31,12 @@ module.exports = function (param) {
 			});
 
 			file.contents.on('end', function() {
+
 				var mockData = JSON.parse(mockDataTxt);
 				Fm.render(mockData.tpl, mockData.data, function(err, out, msg) {
+
+					if (err) return callback(err);
+
 					var stream = through();
 
 					stream.write(out || msg);
@@ -50,6 +49,7 @@ module.exports = function (param) {
 					_this.push(file);
 					return callback();
 				});
+
 			});
 
 			file.contents.on('error', function(err) {
@@ -68,8 +68,11 @@ module.exports = function (param) {
 			// process template with mock data
 			Fm.render(mockData.tpl, mockData.data, function(err, out, msg) {
 
+				if (err) return callback(err);
+
 				// return result or error msg from freemarker engine
 				file.contents = new Buffer(out || msg);
+				file.path = file.path.replace('.json', '.html');
 				_this.push(file);
 				return callback();
 			});
@@ -78,5 +81,5 @@ module.exports = function (param) {
 		return ;
 	}
 
-	return through.obj(freemarker);
-};
+	return through.obj(freemarker)
+}

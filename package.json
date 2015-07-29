@@ -1,6 +1,6 @@
 {
   "name": "gulp-freemarker",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A plugin for Gulp to process Freemarker template files like Java.",
   "keywords": [
     "gulpplugin",
@@ -9,11 +9,11 @@
     "fmpp"
   ],
   "author": {
-    "name": "Li Yi",
-    "email": "i@ijser.cn",
-    "url": "https://github.com/ijse"
+    "name": "Ivo von Putzer Reibegg",
+    "email": "ivo.putzer@gmail.com",
+    "url": "https://github.com/ivoputzer"
   },
-  "repository": "ijse/gulp-freemarker",
+  "repository": "ivoputzer/gulp-freemarker",
   "scripts": {
     "test": "istanbul test ./node_modules/mocha/bin/_mocha --report html -- test/*.js --reporter spec",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"

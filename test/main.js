@@ -53,34 +53,34 @@ describe("gulp-freemarker", function () {
 		stream.end();
 	});
 
-	// it.skip("should error on stream", function (done) {
+	it("should error on stream", function (done) {
 
-	// 	var srcFile = new gutil.File({
-	// 		path: "test/fixtures/hello.json",
-	// 		cwd: "test/",
-	// 		base: "test/fixtures",
-	// 		contents: fs.createReadStream("test/fixtures/hello.json")
-	// 	});
+		var srcFile = new gutil.File({
+			path: "test/fixtures/hello.json",
+			cwd: "test/",
+			base: "test/fixtures",
+			contents: fs.createReadStream("test/fixtures/hello.json")
+		});
 
-	// 	var stream = freemarker({
-	// 		viewRoot: 'test/fixtures',
-	// 		options: {}
-	// 	});
+		var stream = freemarker({
+			viewRoot: 'test/fixtures',
+			options: {}
+		});
 
-	// 	stream.on("error", function(err) {
-	// 		should.exist(err);
-	// 		done();
-	// 	});
+		stream.on("error", function(err) {
+			should.exist(err);
+			done();
+		});
 
-	// 	stream.on("data", function (newFile) {
-	// 		newFile.contents.pipe(es.wait(function(err, data) {
-	// 			done(err);
-	// 		}));
-	// 	});
+		stream.on("data", function (newFile) {
+			newFile.contents.pipe(es.wait(function(err, data) {
+				done(err);
+			}));
+		});
 
-	// 	stream.write(srcFile);
-	// 	stream.end();
-	// });
+		stream.write(srcFile);
+		stream.end();
+	});
 
 	it("should produce expected file via stream", function (done) {
 
